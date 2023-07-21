@@ -1,0 +1,43 @@
+<!-- Assume you have a button with ID 'deleteButton' to trigger the deletion -->
+<button id="deleteButton">Delete Users</button>
+<ul id="userList">
+  <!-- This is a sample list to display the users; you can replace it with your own UI -->
+</ul>
+
+
+// Sample user data in local storage (for testing purposes)
+localStorage.setItem('users', JSON.stringify([
+  { id: 1, name: 'John' },
+  { id: 2, name: 'Alice' },
+  { id: 3, name: 'Bob' },
+  { id: 4, name: 'Eve' }
+]));
+
+// Function to delete multiple users by their IDs
+function deleteUsersByIds(idsToDelete) {
+  // Fetch the existing user data from local storage
+  const users = JSON.parse(localStorage.getItem('users')) || [];
+
+  // Filter out the users with the IDs to delete
+  const updatedUsers = users.filter((user) => !idsToDelete.includes(user.id));
+
+  // Update the local storage with the filtered user data
+  localStorage.setItem('users', JSON.stringify(updatedUsers));
+
+  // Update the UI to reflect the changes (assuming userList is the ID of the list element)
+  const userListElement = document.getElementById('userList');
+  userListElement.innerHTML = ''; // Clear the existing list
+
+  // Rebuild the list with the updated user data
+  updatedUsers.forEach((user) => {
+    const li = document.createElement('li');
+    li.textContent = `${user.name} (ID: ${user.id})`;
+    userListElement.appendChild(li);
+  });
+}
+
+// Event listener for the delete button
+document.getElementById('deleteButton').addEventListener('click', () => {
+  const idsToDelete = [2, 3]; // Sample array of user IDs to delete
+  deleteUsersByIds(idsToDelete);
+});
