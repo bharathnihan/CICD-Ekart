@@ -1,0 +1,59 @@
+<!-- Assume you have an input field and a button to trigger the edit -->
+<input type="text" id="userIdInput" placeholder="Enter User ID" />
+<input type="text" id="newEmailInput" placeholder="Enter New Email" />
+<button id="editButton">Edit Email</button>
+<ul id="userList">
+  <!-- This is a sample list to display the users; you can replace it with your own UI -->
+</ul>
+
+
+// Sample user data in local storage (for testing purposes)
+localStorage.setItem('users', JSON.stringify([
+  { id: 1, name: 'John', email: 'john@example.com' },
+  { id: 2, name: 'Alice', email: 'alice@example.com' },
+  { id: 3, name: 'Bob', email: 'bob@example.com' },
+  { id: 4, name: 'Eve', email: 'eve@example.com' }
+]));
+
+// Function to find a user by their ID
+function findUserById(id) {
+  const users = JSON.parse(localStorage.getItem('users')) || [];
+  return users.find((user) => user.id === id);
+}
+
+// Function to edit a user's email
+function editUserEmail(userId, newEmail) {
+  const users = JSON.parse(localStorage.getItem('users')) || [];
+
+  // Find the user by their ID
+  const user = findUserById(userId);
+
+  if (user) {
+    // Update the user's email
+    user.email = newEmail;
+
+    // Update the user data in local storage
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // Update the UI to reflect the changes (assuming userList is the ID of the list element)
+    const userListElement = document.getElementById('userList');
+    userListElement.innerHTML = ''; // Clear the existing list
+
+    // Rebuild the list with the updated user data
+    users.forEach((user) => {
+      const li = document.createElement('li');
+      li.textContent = `${user.name} (ID: ${user.id}) - Email: ${user.email}`;
+      userListElement.appendChild(li);
+    });
+  } else {
+    alert('User not found!');
+  }
+}
+
+// Event listener for the edit button
+document.getElementById('editButton').addEventListener('click', () => {
+  const userId = parseInt(document.getElementById('userIdInput').value, 10); // Assuming the input is a number
+  const newEmail = document.getElementById('newEmailInput').value;
+
+  editUserEmail(userId, newEmail);
+});
