@@ -1,2 +1,2 @@
-# Web development project1 
-ekart website
+# Web development project 
+basic html, css
